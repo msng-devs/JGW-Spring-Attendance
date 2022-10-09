@@ -1,0 +1,403 @@
+[[Objects]]
+= Objects
+해당 API들에서 사용되는 Object들
+
+해당 API 문서에서는 (Object)로 명세된 경우들이 있습니다.
+
+ex)
+
+[cols="1,1,1,1,1"]
+|===
+|필드명|타입|필수여부|제약요건|설명
+
+|attendance_type_id
+|Number
+|true
+|AttendanceType (object)의 ID(PK)
+|대상 attendance의 attendance_type id
+|===
+
+해당 파트에서는 각각의 Object가 어떤 것을 의미하는지 어떤 value들을 가지고 있는지 서술합니다.
+
+__Tip 1. 보통 ID(=PK) 만 사용하기 때문에, 모든 Value들을 숙지하고 있을 필요는 없습니다. 참고 정도로만 보면 좋습니다.__
+
+__Tip 2. 모든 Object들은 가급적이면 ID를 통해 다룹니다. 모든 값은 정적이지 않으며, 언제든 변경이 가능합니다. __
+__ 그러니 가급적 ID를 통해 데이터를 다루면 좋습니다. __
+
+__Tip 3. Object들의 ID 값을 알수가 없다고요? 아래 대부분의 API들은 전체 조회를 지원합니다! name을 통해 하드코딩을 하는 것이 아닌, 전체 조회를 통해 ID를 가져와 사용하는걸 권장합니다!__
+
+
+[[AttendanceType]]
+== AttendanceType(출결 종류)
+AttendanceType은 출결 종류에 대한 정보를 담고 있는 Object입니다.
+[cols="1,1,1"]
+|===
+|필드명|설명|타입
+
+|id
+|AttendanceType의 ID(PK)입니다.
+|Intger
+
+|name
+|출결 종류의 명칭입니다.
+|String
+|===
+
+ex)
+
+----
+{
+    "id" : 1,
+    "name" : "출석"
+}
+----
+
+주로 Attendance API에서 출결 종류를 구분 하기 위해서 사용합니다. 예를 들어 위 예시의 AttendanceType을 가지는 Attendance는 출석 유형의 Attendance라고 표현할 수 있습니다.
+
+
+=== 연관 API
+
+*주요 API*
+
+AttendanceType API : <<AttendanceType-API>>
+
+*관련 API*
+
+Attendance API : <<Attendance-API>>
+
+[[Event]]
+== Event(행사)
+Event는 행사에 대한 정보를 담고 있는 Object입니다.
+[cols="1,1,1"]
+|===
+|필드명|설명|타입
+
+|id
+|Event의 ID(PK)입니다.
+|Long
+
+|name
+|행사의 명칭입니다.
+|String
+
+|index
+|행사에 대한 설명입니다.
+|String
+
+|startDateTime
+|행사의 시작 시간입니다.
+|DateTime
+
+|endDateTime
+|행사의 종료 시간입니다.
+|DateTime
+
+|createdDateTime
+|해당 object를 생성한 시간입니다.
+|DateTime
+
+|modifiedDateTime
+|해당 object를 마지막으로 수정한 시간입니다.
+|DateTime
+
+|createBy
+|해당 object를 생성한 자입니다.
+|String
+
+|modifiedBy
+|해당 object를 마지막으로 수정한 자입니다.
+|String
+|===
+
+ex)
+
+----
+{
+    "id" : 1,
+    "name" : "2022년 봄학기 세미나",
+    "index" : "2022년 봄학기에 진행하는 세미나 입니다.",
+    "startDateTime": "2022-03-01 00:00:00",
+    "endDateTime": "2022-07-30 00:00:00",
+    "createdDateTime":"2022-03-01 00:00:00",
+    "modifiedDateTime":"2022-03-01 00:00:00",
+    "createBy":"system",
+    "modifiedBy":"system"
+}
+----
+해당 Event는 TimeTable API에서 주로 사용합니다.
+
+행사를 생성하고, 해당 행사에 대한 TimeTable을 생성하고, 생성된 TimeTable에 대해서 Attendance를 추가하는 방식으로 구성되어있습니다.
+
+위 예시를 통해 살펴보자면,  "2022년 봄학기 세미나"라는 Event를 생성하고, 해당 Event에 대한 "4월 11일 발표"라는 TimeTable을 생성하고, 마지막으로 "4월 11일 발표" TimeTable에 대한 Attendance 정보를 등록하면 됩니다.
+
+=== 연관 API
+
+*주요 API*
+
+Event API : <<Event-API>>
+
+*관련 API*
+
+Attendance API : <<Attendance-API>>
+
+TimeTable API : <<TimeTable-API>>
+
+[[TimeTable]]
+== TimeTable(행사의 타임 테이블)
+TimeTable은 행사 내부의 타임 테이블에 대한 정보를 담고 있는 Object입니다.
+[cols="1,1,1"]
+|===
+|필드명|설명|타입
+
+|id
+|Event의 ID(PK)입니다.
+|Long
+
+|name
+|타임 테이블의 명칭입니다.
+|String
+
+|event
+|해당 타임 테이블의 대상 Event 입니다.
+|<<Event>>(Object)
+
+|startDateTime
+|타임 테이블의 시작 시간입니다.
+|DateTime
+
+|endDateTime
+|타임 테이블의 종료 시간입니다.
+|DateTime
+
+|createdDateTime
+|해당 object를 생성한 시간입니다.
+|DateTime
+
+|modifiedDateTime
+|해당 object를 마지막으로 수정한 시간입니다.
+|DateTime
+
+|createBy
+|해당 object를 생성한 자입니다.
+|String
+
+|modifiedBy
+|해당 object를 마지막으로 수정한 자입니다.
+|String
+|===
+
+ex)
+
+----
+{
+    "id" : 1,
+    "name" : "2022년 봄학기 세미나",
+    "event" : {
+            "id" : 1,
+            "name" : "2022년 봄학기 세미나",
+            "index" : "2022년 봄학기에 진행하는 세미나 입니다.",
+            "startDateTime": "2022-03-01 00:00:00",
+            "endDateTime": "2022-07-30 00:00:00",
+            "createdDateTime":"2022-03-01 00:00:00",
+            "modifiedDateTime":"2022-03-01 00:00:00",
+            "createBy":"system",
+            "modifiedBy":"system"
+    },
+    "startDateTime": "2022-03-01 00:00:00",
+    "endDateTime": "2022-07-30 00:00:00",
+    "createdDateTime":"2022-03-01 00:00:00",
+    "modifiedDateTime":"2022-03-01 00:00:00",
+    "createBy":"system",
+    "modifiedBy":"system"
+}
+----
+해당 TimeTable은  Attendance API 및 AttendanceCode API에서 주로 사용합니다.
+
+기존 생성되어있는 행사에 타임 테이블을 추가합니다. 그러면 Attendance API 및 AttendanceCode API에서 해당 타임 테이블에 대한 출결 정보를 등록할 수 있습니다.
+
+위 예시를 통해 살펴보자면,  "2022년 봄학기 세미나"라는 Event가 있을 때, 해당 Event에 대한 "4월 11일 발표"라는 TimeTable을 생성하고, 마지막으로 "4월 11일 발표" TimeTable에 대한 Attendance 정보를 등록하면 됩니다.
+
+=== 연관 API
+
+*주요 API*
+
+TimeTable API : <<TimeTable-API>>
+
+*관련 API*
+
+Attendance API : <<Attendance-API>>
+
+AttendanceCode API : <<Attendance-Code-API>>
+
+Event API : <<Event-API>>
+
+[[Attendance]]
+== Attendance(출결)
+Attendance는 출결에 대한 정보를 담고 있는 Object입니다.
+[cols="1,1,1"]
+|===
+|필드명|설명|타입
+
+|id
+|Attendance의 ID(PK)입니다.
+|Long
+
+|attendanceType
+|출결 종류
+|<<AttendanceType>>(Object)
+
+|index
+|해당 출결에 대한 설명입니다.
+|String
+
+|member
+|대상 member
+|(Object)
+
+|timetable
+|대상 timetable
+|<<TimeTable>>(Object)
+
+|createdDateTime
+|해당 object를 생성한 시간입니다.
+|DateTime
+
+|modifiedDateTime
+|해당 object를 마지막으로 수정한 시간입니다.
+|DateTime
+
+|createBy
+|해당 object를 생성한 자입니다.
+|String
+
+|modifiedBy
+|해당 object를 마지막으로 수정한 자입니다.
+|String
+|===
+
+ex)
+
+----
+{
+    "id" : 1,
+    "attendanceType" : {
+        "id" : 1,
+        "name" : "출석"
+    },
+    "index": "출결 코드를 통해 출석처리되었습니다.",
+    "member": {
+        "id" : "Th1s1sNotRea1U1DDOY0UKNOWH0S",
+        "name" : "홍길동",
+        "email": "test@test.com",
+        "phoneNumber":"01000000000",
+        "studentID":"2022000004",
+        "major" : {
+            "id" : 1,
+            "name" : "인공지능학과"
+        },
+        "role":{
+            "id" : 1,
+            "name" : "ROLE_GUEST"
+        },
+        "rank":{
+            "id" : 1,
+            "name" : "정회원"
+        },
+        "year": 38,
+        "leaveAbsence": false,
+        "dateOfBirth": "2022-01-22",
+        "createdDateTime":"2022-03-01 00:00:00",
+        "modifiedDateTime":"2022-03-01 00:00:00",
+        "createBy":"system",
+        "modifiedBy":"system"
+    },
+    "timetable":{
+        "id" : 1,
+        "name" : "2022년 봄학기 세미나",
+        "event" : {
+                "id" : 1,
+                "name" : "2022년 봄학기 세미나",
+                "index" : "2022년 봄학기에 진행하는 세미나 입니다.",
+                "startDateTime": "2022-03-01 00:00:00",
+                "endDateTime": "2022-07-30 00:00:00",
+                "createdDateTime":"2022-03-01 00:00:00",
+                "modifiedDateTime":"2022-03-01 00:00:00",
+                "createBy":"system",
+                "modifiedBy":"system"
+        },
+        "startDateTime": "2022-03-01 00:00:00",
+        "endDateTime": "2022-07-30 00:00:00",
+        "createdDateTime":"2022-03-01 00:00:00",
+        "modifiedDateTime":"2022-03-01 00:00:00",
+        "createBy":"system",
+        "modifiedBy":"system"
+    },
+    "createdDateTime":"2022-03-01 00:00:00",
+    "modifiedDateTime":"2022-03-01 00:00:00",
+    "createBy":"system",
+    "modifiedBy":"system"
+}
+----
+
+Attendance API 혹은 AttendanceCode API를 통해서 출결 정보를 등록할 수 있습니다.
+
+기존 timetable에 대하여 출결 정보를 등록하면 됩니다.
+
+위 예시를 통해 살펴보자면,  "2022년 봄학기 세미나"라는 Event가 있을 때, 해당 Event에 대한 "4월 11일 발표"라는 TimeTable을 생성하고, 마지막으로 "4월 11일 발표" TimeTable에 대한 Attendance 정보를 등록하면 됩니다.
+
+=== 연관 API
+
+*주요 API*
+
+Attendance API : <<Attendance-API>>
+
+AttendanceCode API : <<Attendance-Code-API>>
+
+*관련 API*
+
+AttendanceType API : <<AttendanceType-API>>
+
+TimeTable API : <<TimeTable-API>>
+
+[[AttendanceCode]]
+== AttendanceCode(출결 코드)
+AttendanceCode는 행사 내부의 타임 테이블에 대한 정보를 담고 있는 Object입니다. 해당 코드는 redis로 관리됩니다.
+[cols="1,1,1"]
+|===
+|필드명|설명|타입
+
+|timeTableId (Key)
+|<<TimeTable>>(Object)의 ID입니다.
+|Long
+
+
+|code (Value)
+|해당 타임 테이블의 6자리 출결 코드입니다.
+|String
+|===
+
+ex)
+
+----
+{
+    1 : "111111",
+}
+----
+
+해당 코드는 AttendanceCode API를 통해 생성할 수 있으며, AttendanceCode API를 통해 해당 코드를 사용하면, 코드의 타임 테이블에 대한 새로운 출결(출석)을 생성할 수 있습니다.
+
+AttendanceCode는 최소 1분에서 하루 까지 유효 시간이 지정되어있습니다. AttendanceCode API를 통해, 남은 유효시간을 확인할 수도 있습니다.
+
+AttendanceCode는 한 TimeTable당 한개씩만 존재할 수 있으며, 기존 AttendanceCode가 존재한다면, 기존 AttendanceCode를 revoke하고 다시 생성해야합니다.
+
+=== 연관 API
+
+*주요 API*
+
+AttendanceCode API : <<Attendance-Code-API>>
+
+*관련 API*
+
+Attendance API : <<Attendance-API>>
+
+TimeTable API : <<TimeTable-API>>
