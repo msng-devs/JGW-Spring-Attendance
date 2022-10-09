@@ -5,7 +5,6 @@ import com.jaramgroupware.attendance.domain.attendanceType.AttendanceType;
 import com.jaramgroupware.attendance.domain.event.Event;
 import com.jaramgroupware.attendance.domain.major.Major;
 import com.jaramgroupware.attendance.domain.member.Member;
-import com.jaramgroupware.attendance.domain.penalty.Penalty;
 import com.jaramgroupware.attendance.domain.rank.Rank;
 import com.jaramgroupware.attendance.domain.role.Role;
 import com.jaramgroupware.attendance.domain.timeTable.TimeTable;
@@ -50,8 +49,6 @@ public class TestUtils {
     private final TimeTable testTimeTable2;
     public final Attendance testAttendance;
     public final Attendance testAttendance2;
-    public final Penalty testPenalty;
-    public final Penalty testPenalty2;
     public final String testUid;
 
     public boolean isListSame(List<?> targetListA , List<?> targetListB){
@@ -216,29 +213,6 @@ public class TestUtils {
         testAttendance2.setCreatedDateTime(testDateTime2);
         testAttendance2.setModifiedDateTime(testDateTime2);
 
-        testPenalty = Penalty.builder()
-                .id(1L)
-                .targetMember(testMember)
-                .type(true)
-                .reason("He insulted Hos.")
-                .build();
-
-        testPenalty.setModifiedBy("system");
-        testPenalty.setCreateBy("system");
-        testPenalty.setCreatedDateTime(testDateTime);
-        testPenalty.setModifiedDateTime(testDateTime);
-
-        testPenalty2 = Penalty.builder()
-                .id(2L)
-                .targetMember(testMember2)
-                .type(false)
-                .reason("he hates hos.")
-                .build();
-
-        testPenalty2.setModifiedBy("system2");
-        testPenalty2.setCreateBy("system2");
-        testPenalty2.setCreatedDateTime(testDateTime2);
-        testPenalty2.setModifiedDateTime(testDateTime2);
         testUid = testMember.getId();
     }
     public HttpEntity<?> createHttpEntity(Object dto,String userUid){
