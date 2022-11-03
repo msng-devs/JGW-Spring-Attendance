@@ -98,7 +98,7 @@ class EventApiControllerTest {
         //when
         ResultActions result = mvc.perform(
                 RestDocumentationRequestBuilders.post("/api/v1/event")
-                        .header("user_uid",testUtils.getTestUid())
+                        .header("user_pk",testUtils.getTestUid())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testEventDto))
                         .accept(MediaType.APPLICATION_JSON))
@@ -136,7 +136,7 @@ class EventApiControllerTest {
         //when
         ResultActions result = mvc.perform(
                 RestDocumentationRequestBuilders.get("/api/v1/event/{eventID}",eventID)
-                        .header("user_uid",testUtils.getTestUid())
+                        .header("user_pk",testUtils.getTestUid())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -190,7 +190,7 @@ class EventApiControllerTest {
 
         ResultActions result = mvc.perform(
                 RestDocumentationRequestBuilders.get("/api/v1/event")
-                        .header("user_uid",testUtils.getTestUid())
+                        .header("user_pk",testUtils.getTestUid())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .queryParams(queryParam))
@@ -227,7 +227,7 @@ class EventApiControllerTest {
         //when
         ResultActions result = mvc.perform(
                 RestDocumentationRequestBuilders.delete("/api/v1/event/{eventID}",eventID)
-                        .header("user_uid",testUtils.getTestUid())
+                        .header("user_pk",testUtils.getTestUid())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -266,7 +266,7 @@ class EventApiControllerTest {
         //when
         ResultActions result = mvc.perform(
                 RestDocumentationRequestBuilders.put("/api/v1/event/{eventID}",eventID)
-                        .header("user_uid",testUtils.getTestUid())
+                        .header("user_pk",testUtils.getTestUid())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(eventUpdateRequestServiceDto))
                         .accept(MediaType.APPLICATION_JSON))

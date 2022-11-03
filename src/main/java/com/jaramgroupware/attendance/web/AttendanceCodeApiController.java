@@ -50,7 +50,7 @@ public class AttendanceCodeApiController {
     @PostMapping
     public ResponseEntity<AttendanceCodeIdResponseControllerDto> createdAttendanceCode(
             @RequestBody @Valid AttendanceCodeAddRequestControllerDto addRequestControllerDto,
-            @RequestHeader("user_uid") String uid){
+            @RequestHeader("user_pk") String uid){
 
         //해당 ID의 Time table이 있는지 검증
         timeTableService.findById(addRequestControllerDto.getTimeTableId());
@@ -75,7 +75,7 @@ public class AttendanceCodeApiController {
     @DeleteMapping("/{timeTableId}")
     public ResponseEntity<TimeTableIdResponseControllerDto> revokeAttendanceCode(
             @PathVariable Long timeTableId,
-            @RequestHeader("user_uid") String uid){
+            @RequestHeader("user_pk") String uid){
 
         //해당 키가 존재하는지 확인
         if(attendanceCodeService.validationKey(timeTableId)) throw new CustomException(ErrorCode.INVALID_TIMETABLE_ID);
@@ -88,7 +88,7 @@ public class AttendanceCodeApiController {
     @GetMapping("/{timeTableId}")
     public ResponseEntity<AttendanceCodeResponseControllerDto> findAttendanceCode(
             @PathVariable Long timeTableId,
-            @RequestHeader("user_uid") String uid){
+            @RequestHeader("user_pk") String uid){
 
         AttendanceCodeResponseControllerDto result = attendanceCodeService.findKey(timeTableId).toControllerDto();
 
@@ -97,7 +97,7 @@ public class AttendanceCodeApiController {
     @PostMapping("/register")
     public ResponseEntity<AttendanceIdResponseControllerDto> registerAttendanceCode(
             @RequestBody @Valid AttendanceCodeRegisterRequestControllerDto attendanceCodeRegisterRequestControllerDto,
-            @RequestHeader("user_uid") String uid){
+            @RequestHeader("user_pk") String uid){
 
         TimeTableResponseServiceDto targetTimeTable = timeTableService.findById(attendanceCodeRegisterRequestControllerDto.getTimeTableID());
 

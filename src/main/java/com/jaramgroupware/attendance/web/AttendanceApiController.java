@@ -46,7 +46,7 @@ public class AttendanceApiController {
     @PostMapping
     public ResponseEntity<MessageDto> addAttendance(
             @RequestBody @NotEmpty @BulkAddAttendanceValid Set<@Valid AttendanceAddRequestControllerDto> dtos,
-            @RequestHeader("user_uid") String uid){
+            @RequestHeader("user_pk") String uid){
 
         attendanceService.add(dtos.stream()
                 .map(AttendanceAddRequestControllerDto::toServiceDto)
@@ -64,8 +64,8 @@ public class AttendanceApiController {
                     {"attendanceType","member","timeTable","index","createdDateTime","modifiedDateTime","createBy","modifiedBy"}
                     ) Pageable pageable,
             @RequestParam(required = false) MultiValueMap<String, String> queryParam,
-            @RequestHeader("user_uid") String uid,
-            @RequestHeader("user_role_id") Integer roleID){
+            @RequestHeader("user_pk") String uid,
+            @RequestHeader("role_pk") Integer roleID){
 
         //만약 자신이 아닌 데이터를 검색할려고 하면 권한 인증
         if((!queryParam.containsKey("memberID") || !Objects.equals(queryParam.getFirst("memberID"), uid)) && roleID < adminRole.getId()){
@@ -100,7 +100,7 @@ public class AttendanceApiController {
     @DeleteMapping
     public ResponseEntity<MessageDto> bulkDelAttendance(
             @RequestBody Set<@Valid AttendanceDeleteRequestControllerDto> dtos,
-            @RequestHeader("user_uid") String uid){
+            @RequestHeader("user_pk") String uid){
 
         attendanceService.delete(dtos.stream().map(AttendanceDeleteRequestControllerDto::toId).collect(Collectors.toSet()));
 
@@ -110,7 +110,7 @@ public class AttendanceApiController {
     @PutMapping
     public ResponseEntity<MessageDto> bulkUpdateAttendance(
             @RequestBody @BulkUpdateAttendanceValid @NotNull Set<@Valid AttendanceBulkUpdateRequestControllerDto> dto,
-            @RequestHeader("user_uid") String uid){
+            @RequestHeader("user_pk") String uid){
 
         attendanceService.update(dto.stream()
                         .map(AttendanceBulkUpdateRequestControllerDto::toServiceDto)

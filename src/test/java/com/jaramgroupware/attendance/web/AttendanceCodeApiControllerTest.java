@@ -107,7 +107,7 @@ class AttendanceCodeApiControllerTest {
         //when
         ResultActions result = mvc.perform(
                 post("/api/v1/attendance-code")
-                        .header("user_uid",testUtils.getTestUid())
+                        .header("user_pk",testUtils.getTestUid())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testDto))
                         .accept(MediaType.APPLICATION_JSON))
@@ -145,7 +145,7 @@ class AttendanceCodeApiControllerTest {
         //when
         ResultActions result = mvc.perform(
                 RestDocumentationRequestBuilders.delete("/api/v1/attendance-code/{targetTimeTableId}",targetTimeTableId)
-                        .header("user_uid",testUtils.getTestUid())
+                        .header("user_pk",testUtils.getTestUid())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -190,7 +190,7 @@ class AttendanceCodeApiControllerTest {
 
         ResultActions result = mvc.perform(
                 RestDocumentationRequestBuilders.get("/api/v1/attendance-code/{targetTimeTableId}",targetTimeTableId)
-                        .header("user_uid",testUtils.getTestUid())
+                        .header("user_pk",testUtils.getTestUid())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -247,7 +247,7 @@ class AttendanceCodeApiControllerTest {
         //when
         ResultActions result = mvc.perform(
                 post("/api/v1/attendance-code/register")
-                        .header("user_uid",testUtils.getTestUid())
+                        .header("user_pk",testUtils.getTestUid())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(attendanceCodeRegisterRequestControllerDto))
                         .accept(MediaType.APPLICATION_JSON))
