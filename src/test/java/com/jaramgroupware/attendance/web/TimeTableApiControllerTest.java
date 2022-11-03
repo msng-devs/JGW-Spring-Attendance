@@ -93,7 +93,7 @@ class TimeTableApiControllerTest {
         //when
         ResultActions result = mvc.perform(
                 post("/api/v1/timetable")
-                        .header("user_uid",testUtils.getTestUid())
+                        .header("user_pk",testUtils.getTestUid())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testTimeTableDto))
                         .accept(MediaType.APPLICATION_JSON))
@@ -131,7 +131,7 @@ class TimeTableApiControllerTest {
         //when
         ResultActions result = mvc.perform(
                 RestDocumentationRequestBuilders.get("/api/v1/timetable/{timeTableId}",timeTableId)
-                        .header("user_uid",testUtils.getTestUid())
+                        .header("user_pk",testUtils.getTestUid())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -186,7 +186,7 @@ class TimeTableApiControllerTest {
         //when
         ResultActions result = mvc.perform(
                 get("/api/v1/timetable")
-                        .header("user_uid",testUtils.getTestUid())
+                        .header("user_pk",testUtils.getTestUid())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .queryParams(queryParam))
@@ -228,7 +228,7 @@ class TimeTableApiControllerTest {
         //when
         ResultActions result = mvc.perform(
                 RestDocumentationRequestBuilders.delete("/api/v1/timetable/{timeTableId}",timeTableId)
-                        .header("user_uid",testUtils.getTestUid())
+                        .header("user_pk",testUtils.getTestUid())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -267,7 +267,7 @@ class TimeTableApiControllerTest {
         //when
         ResultActions result = mvc.perform(
                 put("/api/v1/timetable/"+timeTableId)
-                        .header("user_uid",testUtils.getTestUid())
+                        .header("user_pk",testUtils.getTestUid())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(timeTableUpdateRequestServiceDto))
                         .accept(MediaType.APPLICATION_JSON))

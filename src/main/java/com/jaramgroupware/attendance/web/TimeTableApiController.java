@@ -53,7 +53,7 @@ public class TimeTableApiController {
     @PostMapping
     public ResponseEntity<TimeTableIdResponseControllerDto> addTimeTable(
             @RequestBody @Valid TimeTableAddRequestControllerDto timeTableAddRequestControllerDto,
-            @RequestHeader("user_uid") String uid){
+            @RequestHeader("user_pk") String uid){
 
         //timetable 생성
         Long id = timeTableService.add(
@@ -87,7 +87,7 @@ public class TimeTableApiController {
     @GetMapping("{timeTableId}")
     public ResponseEntity<TimeTableResponseControllerDto> findTimeTableById(
             @PathVariable Long timeTableId,
-            @RequestHeader("user_uid") String uid){
+            @RequestHeader("user_pk") String uid){
 
         TimeTableResponseControllerDto result = timeTableService.findById(timeTableId).toControllerDto();
 
@@ -101,7 +101,7 @@ public class TimeTableApiController {
                     {"id","name","event","startDateTime","endDateTime","createdDateTime","modifiedDateTime","createBy","modifiedBy"}
             ) Pageable pageable,
             @RequestParam(required = false) MultiValueMap<String, String> queryParam,
-            @RequestHeader("user_uid") String uid){
+            @RequestHeader("user_pk") String uid){
 
         //limit 확인 및 추가
         int limit = queryParam.containsKey("limit") ? Integer.parseInt(Objects.requireNonNull(queryParam.getFirst("limit"))) : -1;
@@ -133,7 +133,7 @@ public class TimeTableApiController {
     @DeleteMapping("{timeTableId}")
     public ResponseEntity<TimeTableIdResponseControllerDto> delTimeTable(
             @PathVariable Long timeTableId,
-            @RequestHeader("user_uid") String uid){
+            @RequestHeader("user_pk") String uid){
 
         timeTableService.delete(timeTableId);
 
@@ -144,7 +144,7 @@ public class TimeTableApiController {
     public ResponseEntity<TimeTableResponseControllerDto> updateTimeTable(
             @PathVariable Long eventId,
             @RequestBody @Valid TimeTableUpdateRequestControllerDto timeTableUpdateRequestControllerDto,
-            @RequestHeader("user_uid") String uid){
+            @RequestHeader("user_pk") String uid){
 
         TimeTableResponseControllerDto result = timeTableService.update(eventId,timeTableUpdateRequestControllerDto.toServiceDto(),uid).toControllerDto();
 

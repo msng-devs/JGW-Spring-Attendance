@@ -38,7 +38,7 @@ public class EventApiController {
     @PostMapping
     public ResponseEntity<EventIdResponseControllerDto> addEvent(
             @RequestBody @Valid EventAddRequestControllerDto eventAddRequestControllerDto,
-            @RequestHeader("user_uid") String uid){
+            @RequestHeader("user_pk") String uid){
 
         Long id = eventService.add(eventAddRequestControllerDto.toServiceDto(),uid);
 
@@ -48,7 +48,7 @@ public class EventApiController {
     @GetMapping("{eventId}")
     public ResponseEntity<EventResponseControllerDto> getEventById(
             @PathVariable Long eventId,
-            @RequestHeader("user_uid") String uid){
+            @RequestHeader("user_pk") String uid){
 
         EventResponseControllerDto result = eventService.findById(eventId).toControllerDto();
 
@@ -62,7 +62,7 @@ public class EventApiController {
                     {"id","name","index","startDateTime","endDateTime","createdDateTime","modifiedDateTime","createBy","modifiedBy"}
             ) Pageable pageable,
             @RequestParam(required = false) MultiValueMap<String, String> queryParam,
-            @RequestHeader("user_uid") String uid){
+            @RequestHeader("user_pk") String uid){
 
         //limit 확인 및 추가
         int limit = queryParam.containsKey("limit") ? Integer.parseInt(Objects.requireNonNull(queryParam.getFirst("limit"))) : -1;
@@ -93,7 +93,7 @@ public class EventApiController {
     @DeleteMapping("{eventId}")
     public ResponseEntity<EventIdResponseControllerDto> delEvent(
             @PathVariable Long eventId,
-            @RequestHeader("user_uid") String uid){
+            @RequestHeader("user_pk") String uid){
 
         eventService.delete(eventId);
 
@@ -104,7 +104,7 @@ public class EventApiController {
     public ResponseEntity<EventResponseControllerDto> updateEvent(
             @PathVariable Long eventId,
             @RequestBody @Valid EventUpdateRequestControllerDto eventUpdateRequestControllerDto,
-            @RequestHeader("user_uid") String uid){
+            @RequestHeader("user_pk") String uid){
 
         EventResponseControllerDto result = eventService.update(eventId,eventUpdateRequestControllerDto.toServiceDto(),uid).toControllerDto();
 

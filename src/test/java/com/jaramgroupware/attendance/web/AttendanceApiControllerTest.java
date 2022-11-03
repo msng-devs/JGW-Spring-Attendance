@@ -110,7 +110,7 @@ class AttendanceApiControllerTest {
         //when
         ResultActions result = mvc.perform(
                 post("/api/v1/attendance")
-                        .header("user_uid",testUtils.getTestUid())
+                        .header("user_pk",testUtils.getTestUid())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testDto))
                         .accept(MediaType.APPLICATION_JSON))
@@ -163,8 +163,8 @@ class AttendanceApiControllerTest {
         //when
         ResultActions result = mvc.perform(
                 RestDocumentationRequestBuilders.get("/api/v1/attendance")
-                        .header("user_uid",testUtils.getTestMember2().getId())
-                        .header("user_role_id",4)
+                        .header("user_pk",testUtils.getTestMember2().getId())
+                        .header("role_pk",4)
                         .queryParams(queryParam)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -233,8 +233,8 @@ class AttendanceApiControllerTest {
         //when
         ResultActions result = mvc.perform(
                 RestDocumentationRequestBuilders.get("/api/v1/attendance")
-                        .header("user_uid",testUtils.getTestUid())
-                        .header("user_role_id",4)
+                        .header("user_pk",testUtils.getTestUid())
+                        .header("role_pk",4)
                         .queryParams(queryParam)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -278,8 +278,8 @@ class AttendanceApiControllerTest {
         //when
         ResultActions result = mvc.perform(
                 RestDocumentationRequestBuilders.get("/api/v1/attendance")
-                        .header("user_uid",testUtils.getTestMember2().getId())
-                        .header("user_role_id",3)
+                        .header("user_pk",testUtils.getTestMember2().getId())
+                        .header("role_pk",3)
                         .queryParams(queryParam)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -317,8 +317,8 @@ class AttendanceApiControllerTest {
         //when
         ResultActions result = mvc.perform(
                 RestDocumentationRequestBuilders.get("/api/v1/attendance")
-                        .header("user_uid",testUtils.getTestUid())
-                        .header("user_role_id",3)
+                        .header("user_pk",testUtils.getTestUid())
+                        .header("role_pk",3)
                         .queryParams(queryParam)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -354,7 +354,7 @@ class AttendanceApiControllerTest {
         //when
         ResultActions result = mvc.perform(
                 RestDocumentationRequestBuilders.delete("/api/v1/attendance")
-                        .header("user_uid",testUtils.getTestUid())
+                        .header("user_pk",testUtils.getTestUid())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
@@ -402,7 +402,7 @@ class AttendanceApiControllerTest {
         //when
         ResultActions result = mvc.perform(
                 RestDocumentationRequestBuilders.put("/api/v1/attendance")
-                        .header("user_uid",testUtils.getTestUid())
+                        .header("user_pk",testUtils.getTestUid())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testDtos))
                         .accept(MediaType.APPLICATION_JSON))
