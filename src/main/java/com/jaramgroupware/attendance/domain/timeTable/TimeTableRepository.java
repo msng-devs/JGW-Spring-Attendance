@@ -19,7 +19,7 @@ public interface TimeTableRepository extends JpaRepository<TimeTable,Long> , Jpa
 
     @Modifying(clearAutomatically = true)
     @Query("DELETE FROM TIMETABLE t WHERE t.id = :id")
-    void deleteAllByIdInQuery(@Param("id") Long id);
+    void deleteTimeTableById(@Param("id") Long id);
 
     @Query(value = "SELECT MAX(t.TIMETABLE_START_DTTM) AS maxStartDateTime,MIN(t.TIMETABLE_START_DTTM) AS minStartDateTime,MAX(t.TIMETABLE_END_DTTM) AS maxEndDateTime,MIN(t.TIMETABLE_END_DTTM) AS minEndDateTime FROM TIMETABLE AS t WHERE t.EVENT_EVENT_PK = :id",nativeQuery = true)
     TimeTableDateTimes findTimeTableDateTimesByEventId(@Param(value = "id") Long id);

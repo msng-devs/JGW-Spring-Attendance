@@ -18,5 +18,5 @@ public interface EventRepository extends JpaRepository<Event,Long>, JpaSpecifica
 
     @Modifying(clearAutomatically = true)
     @Query("DELETE FROM EVENT e WHERE e.id = :id")
-    void deleteByIdId(@Param("id") Long id);
+    void deleteEventById(@Param("id") Long id);
 }

@@ -49,6 +49,7 @@ public class Event extends BaseEntity {
     }
 
     public boolean validationDateTime(TimeTableDateTimes timeTableDateTimes){
+        //만약 하나라도 null 일 경우 event 아래의 timetable이 한개도 없는 것으로 판단함.
         if(timeTableDateTimes.getMaxEndDateTime() == null) return true;
 
         return (startDateTime.isAfter(timeTableDateTimes.getMinStartDateTime()) || startDateTime.isEqual(timeTableDateTimes.getMinStartDateTime())) &&

@@ -50,7 +50,6 @@ public class TimeTable extends BaseEntity {
     }
 
     public void update(TimeTable timeTable){
-
         index = timeTable.getIndex();
         name = timeTable.getName();
         startDateTime = timeTable.getStartDateTime();
