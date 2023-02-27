@@ -27,13 +27,15 @@ public class AttendanceCodeService {
      * @return 생성된 코드의 정보
      * @author 황준서(37기) hzser123@gmail.com
      */
-    @Transactional
     public AttendanceCodeResponseServiceDto createCode(AttendanceCodeAddRequestServiceDto attendanceCodeDto){
         ValueOperations<String,String> valueOperations = redisTemplate.opsForValue();
 
-
-
         var key = PREFIX + attendanceCodeDto.getTimeTableId();
+        var code = valueOperations.get(key);
+
+        if(code != null) throw new ServiceException(ServiceErrorCode.ALREADY_HAS_CODE);
+
+
         valueOperations.set(key, attendanceCodeDto.getCode());
 
         LocalDateTime expireAt = null;

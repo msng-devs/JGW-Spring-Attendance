@@ -1,7 +1,10 @@
 package com.jaramgroupware.attendance.domain.member;
 
 
+import com.jaramgroupware.attendance.domain.attendance.Attendance;
+import com.jaramgroupware.attendance.domain.attendanceType.AttendanceType;
 import com.jaramgroupware.attendance.domain.role.Role;
+import com.jaramgroupware.attendance.domain.timeTable.TimeTable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.*;
@@ -35,4 +38,23 @@ public class Member{
     @Column(name = "MEMBER_STATUS",nullable = false)
     private boolean isStatus;
 
+    /**
+     * 해당 member의 정보를 바탕으로 새로운 attendance를 생성합니다/
+     * @param timeTable
+     * @param attendanceType
+     * @return
+     */
+    public Attendance createSystemAttendance(TimeTable timeTable, AttendanceType attendanceType){
+        var newAttendance = Attendance
+                .builder()
+                .attendanceType(attendanceType)
+                .timeTable(timeTable)
+                .member(this)
+                .index("시스템에 의해 자동으로 생성되었습니다.")
+                .build();
+        newAttendance.setCreateBy("system");
+        newAttendance.setModifiedBy("system");
+
+        return newAttendance;
+    }
 }

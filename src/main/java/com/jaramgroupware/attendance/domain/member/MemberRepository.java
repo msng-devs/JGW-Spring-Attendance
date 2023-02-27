@@ -18,7 +18,7 @@ public interface MemberRepository extends JpaRepository<Member,String>, JpaSpeci
             "  m.MEMBER_EMAIL,\n" +
             "  m.MEMBER_NM,\n" +
             "  m.ROLE_ROLE_PK,\n" +
-            "  m.MEMBER_STATUS,\n" +
+            "  m.MEMBER_STATUS\n" +
             "FROM\n" +
             "  MEMBER m\n" +
             "  INNER JOIN MEMBER_INFO m_info\n" +
@@ -31,5 +31,5 @@ public interface MemberRepository extends JpaRepository<Member,String>, JpaSpeci
             "  m_info.RANK_RANK_PK IN :ranks\n" +
             "  AND\n" +
             "  m_la.MEMBER_LEAVE_ABSENCE_STATUS = 1\n",nativeQuery = true)
-    Optional<List<Member>> findTargetMember(@Param("roles") Set<Integer> roles,@Param("ranks") Set<Integer> ranks);
+    List<Member> findTargetMember(@Param("roles") Set<Integer> roles,@Param("ranks") Set<Integer> ranks);
 }

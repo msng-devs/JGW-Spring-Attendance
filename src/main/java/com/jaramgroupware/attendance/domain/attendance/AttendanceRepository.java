@@ -15,8 +15,9 @@ import java.util.Set;
 public interface AttendanceRepository extends JpaRepository<Attendance,Long>, JpaSpecificationExecutor<Attendance>{
 
     @Modifying(clearAutomatically = true)
-    @Query("DELETE FROM ATTENDANCE a WHERE a.id in :ids")
-    void deleteAllByIdInQuery(@Param("ids") Set<Long> ids);
+    @Query("DELETE FROM ATTENDANCE a WHERE a.id in :id")
+    void deleteAttendanceById(@Param("id") Long id);
+
     Optional<List<Attendance>> findAllBy();
 
     List<Attendance> findAllByIdIn(Set<Long> ids);

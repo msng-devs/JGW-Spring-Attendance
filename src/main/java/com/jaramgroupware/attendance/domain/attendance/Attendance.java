@@ -44,10 +44,10 @@ public class Attendance extends BaseEntity{
     @Column(name = "ATTENDANCE_INDEX")
     private String index;
 
-    public void update(Attendance attendance,String modified){
-        attendanceType = attendance.getAttendanceType();
+    public void update(Attendance attendance){
+        if(attendance.getAttendanceType() != null) attendanceType = attendance.getAttendanceType();
         index = attendance.getIndex();
-        modifiedBy = modified;
+        modifiedBy = attendance.getModifiedBy();
     }
 
 }
