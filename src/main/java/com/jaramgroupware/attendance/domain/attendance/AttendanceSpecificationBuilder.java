@@ -1,9 +1,9 @@
-/*
 package com.jaramgroupware.attendance.domain.attendance;
 
-import com.jaramgroupware.attendance.utils.parse.ParseByNameBuilder;
-import com.jaramgroupware.attendance.utils.spec.SearchCriteria;
-import com.jaramgroupware.attendance.utils.spec.SearchOperation;
+
+import com.jaramgroupware.attendance.utlis.parse.ParseByNameBuilder;
+import com.jaramgroupware.attendance.utlis.spec.SearchCriteria;
+import com.jaramgroupware.attendance.utlis.spec.SearchOperation;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -67,7 +67,7 @@ public class AttendanceSpecificationBuilder{
                 if(queryParam.containsKey(key.getQueryParamName())){
                     specification.add(new SearchCriteria(key.getTableName()
                             , Collections.singletonList(parseByNameBuilder.parse(queryParam.getFirst(key.getQueryParamName()), key.getType()))
-                            ,SearchOperation.EQUAL));
+                            , SearchOperation.EQUAL));
                 }
             }
 
@@ -108,4 +108,4 @@ public class AttendanceSpecificationBuilder{
 
 }
 
-*/
+

@@ -14,6 +14,8 @@ import com.jaramgroupware.attendance.utlis.exception.serviceException.ServiceErr
 import com.jaramgroupware.attendance.utlis.exception.serviceException.ServiceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,7 +49,7 @@ public class TimeTableService {
     }
 
     @Transactional
-    public TimeTableResponseServiceDto createTimeTable(TimeTableAddRequestServiceDto requestDto, Set<Integer> targetRoles,Set<Integer> targetRanks,Integer defaultAttendanceType){
+    public TimeTableResponseServiceDto createTimeTable(TimeTableAddRequestServiceDto requestDto, List<Integer> targetRoles,List<Integer> targetRanks,Integer defaultAttendanceType){
         //신규 timetable 추가
         var targetEvent = eventRepository.findById(requestDto.getEventID()).orElseThrow(() -> new ServiceException(ServiceErrorCode.INVALID_EVENT));
         var newTimeTable = requestDto.toEntity(targetEvent);
@@ -79,5 +81,15 @@ public class TimeTableService {
         var targetTimeTable = timeTableRepository.findById(id).orElseThrow(() -> new ServiceException(ServiceErrorCode.INVALID_TIMETABLE));
         timeTableRepository.delete(targetTimeTable);
         return new TimeTableResponseServiceDto(timeTableRepository.save(targetTimeTable));
+    }
+
+    @Transactional(readOnly = true)
+    public List<TimeTableResponseServiceDto> findAll(Specification<TimeTable> specification, Pageable pageable){
+
+        return timeTableRepository.findAll(specification,pageable)
+                .stream()
+                .map(TimeTableResponseServiceDto::new)
+                .collect(Collectors.toList());
+
     }
 }

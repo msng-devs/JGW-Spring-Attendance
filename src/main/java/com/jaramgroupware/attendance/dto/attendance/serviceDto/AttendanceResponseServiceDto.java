@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 public class AttendanceResponseServiceDto {
 
+    private Long id;
     private Integer attendanceTypeID;
     private String memberID;
     private LocalDateTime createdDateTime;
@@ -26,18 +27,18 @@ public class AttendanceResponseServiceDto {
 
     public AttendanceResponseControllerDto toControllerDto(){
         return AttendanceResponseControllerDto.builder()
+                .id(id)
                 .attendanceTypeID(attendanceTypeID)
                 .memberID(memberID)
-                .createdDateTime(createdDateTime)
                 .modifiedDateTime(modifiedDateTime)
                 .timeTableID(timeTableID)
-                .createBy(createBy)
                 .modifyBy(modifyBy)
                 .index(index)
                 .build();
     }
 
     public AttendanceResponseServiceDto(Attendance attendance){
+        id = attendance.getId();
         attendanceTypeID = attendance.getAttendanceType().getId();
         memberID = attendance.getMember().getId();
         timeTableID = attendance.getTimeTable().getId();

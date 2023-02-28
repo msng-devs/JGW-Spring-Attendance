@@ -1,5 +1,6 @@
 package com.jaramgroupware.attendance.service;
 
+import com.jaramgroupware.attendance.domain.attendance.Attendance;
 import com.jaramgroupware.attendance.domain.attendance.AttendanceRepository;
 import com.jaramgroupware.attendance.domain.attendanceType.AttendanceTypeRepository;
 import com.jaramgroupware.attendance.domain.member.MemberRepository;
@@ -11,8 +12,13 @@ import com.jaramgroupware.attendance.utlis.exception.serviceException.ServiceErr
 import com.jaramgroupware.attendance.utlis.exception.serviceException.ServiceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -61,5 +67,13 @@ public class AttendanceService {
     @Transactional
     public void deleteAttendance(Long attendanceId){
         attendanceRepository.deleteAttendanceById(attendanceId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<AttendanceResponseServiceDto> findAll(Specification<Attendance> specification, Pageable pageable){
+        return attendanceRepository.findAll(specification,pageable)
+                .stream()
+                .map(AttendanceResponseServiceDto::new)
+                .collect(Collectors.toList());
     }
 }

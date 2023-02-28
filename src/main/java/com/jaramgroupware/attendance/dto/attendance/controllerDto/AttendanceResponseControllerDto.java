@@ -15,12 +15,11 @@ import java.time.LocalDateTime;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class AttendanceResponseControllerDto {
 
+    private Long id;
     private Integer attendanceTypeID;
     private Long timeTableID;
     private String memberID;
-    private LocalDateTime createdDateTime;
     private LocalDateTime modifiedDateTime;
-    private String createBy;
     private String modifyBy;
     private String index;
 

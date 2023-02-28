@@ -1,4 +1,4 @@
-package com.jaramgroupware.attendance.utlis.validation.pageAble;
+package com.jaramgroupware.attendance.utlis.validation.pageable;
 
 
 import jakarta.validation.Constraint;
@@ -17,4 +17,5 @@ public @interface  PageableValid {
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
     String[] sortKeys();
+    int maxPageSize();
 }

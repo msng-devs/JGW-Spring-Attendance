@@ -1,5 +1,6 @@
 package com.jaramgroupware.attendance.service;
 
+import com.jaramgroupware.attendance.domain.event.Event;
 import com.jaramgroupware.attendance.domain.event.EventRepository;
 import com.jaramgroupware.attendance.domain.timeTable.TimeTableRepository;
 import com.jaramgroupware.attendance.dto.event.serviceDto.EventAddRequestServiceDto;
@@ -9,8 +10,13 @@ import com.jaramgroupware.attendance.utlis.exception.serviceException.ServiceErr
 import com.jaramgroupware.attendance.utlis.exception.serviceException.ServiceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -49,5 +55,13 @@ public class EventService {
         if(!targetEvent.validationDateTime(timeTableDateTimes)) throw new ServiceException(ServiceErrorCode.CANNOT_CHANGE_EVENT_DATETIMES);
 
         return new EventResponseServiceDto(targetEvent);
+    }
+
+    @Transactional(readOnly = true)
+    public List<EventResponseServiceDto> findAll(Specification<Event> specification, Pageable pageable){
+
+        return eventRepository.findAll(specification,pageable)
+                .stream().map(EventResponseServiceDto::new)
+                .collect(Collectors.toList());
     }
 }
