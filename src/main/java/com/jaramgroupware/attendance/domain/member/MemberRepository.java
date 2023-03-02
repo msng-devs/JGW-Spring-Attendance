@@ -30,6 +30,6 @@ public interface MemberRepository extends JpaRepository<Member,String>, JpaSpeci
             "  AND\n" +
             "  m_info.RANK_RANK_PK IN :ranks\n" +
             "  AND\n" +
-            "  m_la.MEMBER_LEAVE_ABSENCE_STATUS = 1\n",nativeQuery = true)
+            "  m_la.MEMBER_LEAVE_ABSENCE_STATUS = 0\n",nativeQuery = true)
     List<Member> findTargetMember(@Param("roles") List<Integer> roles,@Param("ranks") List<Integer> ranks);
 }

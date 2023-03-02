@@ -51,6 +51,9 @@ dependencies {
     testImplementation 'org.mockito:mockito-junit-jupiter'
     testImplementation 'it.ozimov:embedded-redis:0.7.3'
 
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-logging
+    implementation 'org.springframework.boot:spring-boot-starter-logging:3.0.2'
+
     //lombok & configuration-processor
     compileOnly 'org.projectlombok:lombok:1.18.20'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
