@@ -3,6 +3,8 @@ package com.jaramgroupware.attendance.domain.attendance;
 
 import com.jaramgroupware.attendance.config.TestDataUtils;
 import com.jaramgroupware.attendance.utlis.parse.ParseByNameBuilder;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +23,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -33,10 +33,6 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 
 @ActiveProfiles("test")
-@SqlGroup({
-        @Sql(scripts = "classpath:tableBuild.sql",executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD),
-        @Sql(scripts = "classpath:testDataSet.sql",executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ExtendWith(SpringExtension.class)
 @Transactional
@@ -53,13 +49,8 @@ class AttendanceRepositoryTest {
 
     private final TestDataUtils testUtils = new TestDataUtils();
 
-    @BeforeEach
-    void setUp() {
-    }
 
-    @AfterEach
-    void tearDown() {
-    }
+
 
     @DisplayName("deleteAttendanceById 테스트 - 2개의 attendance의 Id가 주어지면, 두 Attendance를 삭제한다.")
     @Test
@@ -344,7 +335,7 @@ class AttendanceRepositoryTest {
         //then
         assertThat(res,is(notNullValue()));
         assertEquals(2L,res.getTotalElements());
-        assertTrue(testUtils.isListSame(res.getContent(),Arrays.asList(testAttendances,testAttendances2)));
+        Assertions.assertTrue(testUtils.isListSame(res.getContent(),Arrays.asList(testAttendances,testAttendances2)));
     }
 
     @DisplayName("Attendance createdDateTime 검색 테스트 - 시작 범위만 주어졌을 때2")
@@ -405,7 +396,7 @@ class AttendanceRepositoryTest {
         //then
         assertThat(res,is(notNullValue()));
         assertEquals(2L,res.getTotalElements());
-        assertTrue(testUtils.isListSame(res.getContent(),Arrays.asList(testAttendances,testAttendances2)));
+        Assertions.assertTrue(testUtils.isListSame(res.getContent(),Arrays.asList(testAttendances,testAttendances2)));
     }
 
     @DisplayName("Attendance modifiedDateTime 검색 테스트 - 시작 범위와 종료 범위가 주어졌을 때")
@@ -468,7 +459,7 @@ class AttendanceRepositoryTest {
         //then
         assertThat(res,is(notNullValue()));
         assertEquals(2L,res.getTotalElements());
-        assertTrue(testUtils.isListSame(res.getContent(),Arrays.asList(testAttendances,testAttendances2)));
+        Assertions.assertTrue(testUtils.isListSame(res.getContent(),Arrays.asList(testAttendances,testAttendances2)));
     }
 
     @DisplayName("Attendance modifiedDateTime 검색 테스트 - 시작 범위만 주어졌을 때2")
@@ -529,7 +520,7 @@ class AttendanceRepositoryTest {
         //then
         assertThat(res,is(notNullValue()));
         assertEquals(2L,res.getTotalElements());
-        assertTrue(testUtils.isListSame(res.getContent(),Arrays.asList(testAttendances,testAttendances2)));
+        Assertions.assertTrue(testUtils.isListSame(res.getContent(),Arrays.asList(testAttendances,testAttendances2)));
     }
 
     @Test

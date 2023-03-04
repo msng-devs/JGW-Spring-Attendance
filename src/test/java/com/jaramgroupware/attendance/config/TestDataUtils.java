@@ -134,6 +134,7 @@ public class TestDataUtils {
                 .name("test timetable1")
                 .startDateTime(testDateTime)
                 .endDateTime(testDateTime)
+                .index("상세 설명이 없습니다")
                 .build();
 
         testTimeTable.setModifiedBy("system");
@@ -147,6 +148,7 @@ public class TestDataUtils {
                 .name("test timetable2")
                 .startDateTime(testDateTime2)
                 .endDateTime(testDateTime2)
+                .index("상세 설명이 없습니다")
                 .build();
 
         testTimeTable2.setModifiedBy("system2");
