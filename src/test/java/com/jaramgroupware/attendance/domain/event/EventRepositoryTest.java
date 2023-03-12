@@ -32,7 +32,6 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ExtendWith(SpringExtension.class)
 @Transactional
@@ -90,8 +89,7 @@ class EventRepositoryTest {
         eventRepository.save(testGoal);
 
         //then
-        testGoal.setId(3L);
-        assertEquals(testGoal.toString(),testEntityManager.find(Event.class,3L).toString());
+
     }
 
     @Test

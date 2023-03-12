@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
 @AttributeOverrides({
         @AttributeOverride(name = "createdDateTime",column = @Column(name = "TIMETABLE_CREATED_DTTM")),
         @AttributeOverride(name = "modifiedDateTime",column = @Column(name = "TIMETABLE_MODIFIED_DTTM")),

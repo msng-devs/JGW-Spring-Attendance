@@ -26,7 +26,7 @@ public class AuthorizationAdvisor {
         var userUid = request.getHeader("user_pk");
         var roleId = (request.getHeader("role_pk") != null)? Integer.parseInt(request.getHeader("role_pk")) : null;
 
-        if(userUid == null || roleId == null||RBAC.role() > roleId) throw new ControllerException(ControllerErrorCode.FORBIDDEN_ROLE);
+        if(userUid == null || roleId == null|| RBAC.role() > roleId) throw new ControllerException(ControllerErrorCode.FORBIDDEN_ROLE);
     }
 
     @Before("@annotation(Auth)")

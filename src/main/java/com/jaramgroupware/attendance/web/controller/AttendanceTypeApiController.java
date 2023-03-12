@@ -23,7 +23,7 @@ public class AttendanceTypeApiController {
     private final AttendanceTypeService attendanceTypeService;
 
     @Auth
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<List<AttendanceTypeResponseControllerDto>> findAllAttendanceType(){
         var data = attendanceTypeService.findAll();
         return ResponseEntity.ok(data.stream().map(AttendanceTypeResponseServiceDto::toControllerDto).collect(Collectors.toList()));

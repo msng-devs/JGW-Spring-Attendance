@@ -22,7 +22,6 @@ public class AttendanceResponseServiceDto {
     private String createBy;
     private String modifyBy;
     private Long timeTableID;
-    private String timeTableName;
     private String index;
 
     public AttendanceResponseControllerDto toControllerDto(){

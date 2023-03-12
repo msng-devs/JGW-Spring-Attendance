@@ -38,7 +38,7 @@ public class AttendanceApiController {
     private final AttendanceSpecificationBuilder attendanceSpecificationBuilder;
 
     @RBAC(role = 4)
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<AttendanceResponseControllerDto> createAttendance(
             @RequestBody @Valid AttendanceAddRequestControllerDto requestDto,
             @RequestHeader("user_pk") String userUid)

@@ -2,6 +2,7 @@ package com.jaramgroupware.attendance.service;
 
 import com.jaramgroupware.attendance.dto.attendanceCode.serviceDto.AttendanceCodeAddRequestServiceDto;
 import com.jaramgroupware.attendance.dto.attendanceCode.serviceDto.AttendanceCodeResponseServiceDto;
+import com.jaramgroupware.attendance.utlis.date.DefaultLocalDateTimeManger;
 import com.jaramgroupware.attendance.utlis.exception.serviceException.ServiceErrorCode;
 import com.jaramgroupware.attendance.utlis.exception.serviceException.ServiceException;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ import java.time.LocalDateTime;
 public class AttendanceCodeService {
     private final RedisTemplate<String,String> redisTemplate;
     private static final  String PREFIX = "AttendanceCode_";
-
+    private final DefaultLocalDateTimeManger localDateTimeManger;
     /**
      * 주어진 정보를 바탕으로 신규 출결 코드를 발급함.
      * @param attendanceCodeDto 생성할 코드의 정보
@@ -39,9 +40,10 @@ public class AttendanceCodeService {
         valueOperations.set(key, attendanceCodeDto.getCode());
 
         LocalDateTime expireAt = null;
-        if(attendanceCodeDto.getExpSec() == -1){
-            expireAt = LocalDateTime.now().plusSeconds(attendanceCodeDto.getExpSec());
-            redisTemplate.expire(key, Duration.ofSeconds(Duration.between(LocalDateTime.now(),expireAt).toSeconds()));
+        if(attendanceCodeDto.getExpSec() > 0){
+            var now = localDateTimeManger.getNow();
+            expireAt = now.plusSeconds(attendanceCodeDto.getExpSec());
+            redisTemplate.expire(key, Duration.ofSeconds(Duration.between(now,expireAt).toSeconds()));
 
             log.info("Publish Attendance Code timetable ID -> {} code -> {} exp -> {}",attendanceCodeDto.getTimeTableId(),attendanceCodeDto.getCode(),expireAt);
         }else{
@@ -61,7 +63,7 @@ public class AttendanceCodeService {
      * @author 황준서(37기) hzser123@gmail.com
      */
     public void revokeCode(Long timeTableId){
-        var key = PREFIX + timeTableId;
+        var key = PREFIX + timeTableId.toString();
         var result = redisTemplate.delete(key);
         if(!result) throw new ServiceException(ServiceErrorCode.INVALID_ATTENDANCE_CODE);
     }
@@ -83,7 +85,7 @@ public class AttendanceCodeService {
 
         return AttendanceCodeResponseServiceDto.builder()
                 .code(code)
-                .expAt(LocalDateTime.now().plusSeconds(expSec))
+                .expAt(localDateTimeManger.getNow().plusSeconds(expSec))
                 .build();
 
     }

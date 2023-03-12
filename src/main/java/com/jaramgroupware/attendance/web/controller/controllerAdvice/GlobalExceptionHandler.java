@@ -1,6 +1,8 @@
 package com.jaramgroupware.attendance.web.controller.controllerAdvice;
 
 import com.jaramgroupware.attendance.dto.others.controllerDto.ErrorResponseDto;
+import com.jaramgroupware.attendance.utlis.exception.controllerExecption.ControllerException;
+import com.jaramgroupware.attendance.utlis.exception.serviceException.ServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -44,6 +46,32 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .title("서버에 오류가 발생했습니다.")
                 .detail("서버에 알 수 없는 오류가 발생했습니다. 잠시후 다시 시도해주세요.")
+                .instance(request.getContextPath())
+                .build());
+    }
+
+    @ExceptionHandler({ ControllerException.class })
+    protected ResponseEntity<ErrorResponseDto> handleControllerException(ControllerException exception, WebRequest request) {
+        log.info("Path : {} -> Throw {} / Message {}",request.getContextPath(),exception.getClass().getSimpleName(),exception.getErrorCode().getDetail());
+
+        return ResponseEntity.status(exception.getErrorCode().getHttpStatus()).body(ErrorResponseDto.builder()
+                .type(exception.getErrorCode().getType())
+                .status(exception.getErrorCode().getHttpStatus())
+                .title(exception.getErrorCode().getTitle())
+                .detail(exception.getErrorCode().getDetail())
+                .instance(request.getContextPath())
+                .build());
+    }
+
+    @ExceptionHandler({ ServiceException.class })
+    protected ResponseEntity<ErrorResponseDto> handleServiceException(ServiceException exception, WebRequest request) {
+        log.info("Path : {} -> Throw {} / Message {}",request.getContextPath(),exception.getClass().getSimpleName(),exception.getErrorCode().getDetail());
+
+        return ResponseEntity.status(exception.getErrorCode().getHttpStatus()).body(ErrorResponseDto.builder()
+                .type(exception.getErrorCode().getType())
+                .status(exception.getErrorCode().getHttpStatus())
+                .title(exception.getErrorCode().getTitle())
+                .detail(exception.getErrorCode().getDetail())
                 .instance(request.getContextPath())
                 .build());
     }
