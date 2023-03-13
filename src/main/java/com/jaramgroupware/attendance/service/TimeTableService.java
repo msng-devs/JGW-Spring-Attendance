@@ -77,10 +77,8 @@ public class TimeTableService {
     }
 
     @Transactional
-    public TimeTableResponseServiceDto deleteTimeTable(Long id){
-        var targetTimeTable = timeTableRepository.findById(id).orElseThrow(() -> new ServiceException(ServiceErrorCode.INVALID_TIMETABLE));
-        timeTableRepository.delete(targetTimeTable);
-        return new TimeTableResponseServiceDto(timeTableRepository.save(targetTimeTable));
+    public void deleteTimeTable(Long id){
+        timeTableRepository.deleteTimeTableById(id);
     }
 
     @Transactional(readOnly = true)

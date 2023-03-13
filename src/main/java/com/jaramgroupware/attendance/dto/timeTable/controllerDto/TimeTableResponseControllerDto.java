@@ -19,8 +19,8 @@ public class TimeTableResponseControllerDto {
 
     private Long id;
     private String name;
-    private LocalDateTime createdDateTime;
-    private String createdBy;
+    private LocalDateTime modifiedDateTime;
+    private String modifyBy;
     private Long eventID;
     private String index;
     private LocalDateTime startDateTime;

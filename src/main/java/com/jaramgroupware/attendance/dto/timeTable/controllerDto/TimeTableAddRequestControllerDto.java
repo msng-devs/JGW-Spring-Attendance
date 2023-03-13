@@ -28,7 +28,7 @@ public class TimeTableAddRequestControllerDto {
     })
     private String name;
 
-    @Size(max = 50, message = "index -> 해당 필드는 200자 이하여야 합니다.")
+    @Size(max = 200, message = "index -> 해당 필드는 200자 이하여야 합니다.")
     private String index;
 
     @NotNull(message = "event_id -> 해당 필드는 필수입니다.")

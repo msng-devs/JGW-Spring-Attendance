@@ -44,7 +44,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/api/v1/timeTable")
+@RequestMapping("/api/v1/timetable")
 @RestController
 public class TimeTableApiController {
 
@@ -78,7 +78,7 @@ public class TimeTableApiController {
     }
 
     @RBAC(role = 4)
-    @PostMapping("/")
+    @PostMapping
     public EntityModel<TimeTableResponseControllerDto> addTimeTable(
             @Valid @RequestBody TimeTableAddRequestControllerDto requestDto,
             @RequestParam(value = "addAttendance",defaultValue = "true") boolean isAddAttendance,
@@ -116,12 +116,8 @@ public class TimeTableApiController {
 
     @RBAC(role = 4)
     @DeleteMapping("/{timeTableId}")
-    public ResponseEntity<MessageResponseDto> deleteTimeTable(
-            @PathVariable Long timeTableId){
-
-        var newTimeTable = timeTableService.deleteTimeTable(timeTableId);
-        var data = newTimeTable.toControllerDto();
-
+    public ResponseEntity<MessageResponseDto> deleteTimeTable(@PathVariable Long timeTableId){
+        timeTableService.deleteTimeTable(timeTableId);
         return ResponseEntity.ok(new MessageResponseDto("OK"));
     }
 
@@ -142,22 +138,14 @@ public class TimeTableApiController {
     @PostMapping("/{timeTableId}/attendanceCode")
     public EntityModel<AttendanceCodeResponseControllerDto> publishTimeTableAttendanceCode(
             @PathVariable Long timeTableId,
-            @Valid @RequestBody AttendanceCodeAddRequestControllerDto requestDto)
+            @Valid @RequestBody  AttendanceCodeAddRequestControllerDto requestDto)
     {
         //해당 timetable이 존재하는지 검증
         timeTableService.findServiceById(timeTableId);
 
-        var newAttendanceCodeInfo = attendanceCodeService.createCode(
-                AttendanceCodeAddRequestServiceDto.builder()
-                        .code(codeGenerator.getKey(CODE_LENGTH))
-                        .timeTableId(timeTableId.toString())
-                        .expSec(requestDto.getExpSec())
-                        .build());
+        var newAttendanceCodeInfo = attendanceCodeService.createCode(requestDto.toServiceDto(codeGenerator.getKey(CODE_LENGTH),timeTableId));
 
-        var data = AttendanceCodeResponseControllerDto.builder()
-                .code(newAttendanceCodeInfo.getCode())
-                .expAt(newAttendanceCodeInfo.getExpAt())
-                .build();
+        var data = newAttendanceCodeInfo.toControllerDto();
 
         return EntityModel.of(data,
                 linkTo(methodOn(TimeTableApiController.class).getTimeTableAttendanceCode(timeTableId)).withSelfRel());
@@ -170,7 +158,7 @@ public class TimeTableApiController {
             @RequestParam(value = "code",defaultValue = "null") String code,
             @RequestHeader(value = "user_pk") String userUid)
     {
-        var targetTimeTable = timeTableService.findServiceById(timeTableId);
+        timeTableService.findServiceById(timeTableId);
         var codeInfo = attendanceCodeService.getCodeByTimeTable(timeTableId);
 
         if(!codeInfo.getCode().equals(code)){
@@ -200,10 +188,7 @@ public class TimeTableApiController {
         timeTableService.findServiceById(timeTableId);
 
         var targetAttendanceCodeInfo = attendanceCodeService.getCodeByTimeTable(timeTableId);
-        var data = AttendanceCodeResponseControllerDto.builder()
-                .code(targetAttendanceCodeInfo.getCode())
-                .expAt(targetAttendanceCodeInfo.getExpAt())
-                .build();
+        var data = targetAttendanceCodeInfo.toControllerDto();
 
         return EntityModel.of(data,
                 linkTo(methodOn(TimeTableApiController.class).getTimeTableAttendanceCode(timeTableId)).withSelfRel());
