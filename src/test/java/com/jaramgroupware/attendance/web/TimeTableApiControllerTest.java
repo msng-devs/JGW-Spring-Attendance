@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.jaramgroupware.attendance.TestUtils;
+import com.jaramgroupware.attendance.config.TestDataUtils;
 import com.jaramgroupware.attendance.dto.event.serviceDto.EventResponseServiceDto;
 import com.jaramgroupware.attendance.dto.timeTable.controllerDto.TimeTableAddRequestControllerDto;
 import com.jaramgroupware.attendance.dto.timeTable.controllerDto.TimeTableUpdateRequestControllerDto;
@@ -64,7 +65,7 @@ class TimeTableApiControllerTest {
     @MockBean
     private EventService eventService;
 
-    private final TestUtils testUtils = new TestUtils();
+    private final TestDataUtils testUtils = new TestDataUtils();
 
     @BeforeEach
     void setUp() {

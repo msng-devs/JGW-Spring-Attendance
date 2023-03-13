@@ -50,7 +50,7 @@ public class EventApiController {
     }
 
     @RBAC(role = 4)
-    @PostMapping("/")
+    @PostMapping
     public EntityModel<EventResponseControllerDto> createEvent(
             @RequestBody @Valid EventAddRequestControllerDto requestDto,
             @RequestHeader(value = "user_pk") String userUid){
@@ -84,7 +84,7 @@ public class EventApiController {
     }
 
     @Auth
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<List<EventResponseControllerDto>> getEventAll(
             @PageableDefault(page = 0,size = 20,sort = "id",direction = Sort.Direction.DESC)
             @PageableValid(sortKeys = {"id","name","index","startDateTime","endDateTime","createdDateTime","modifiedDateTime","createBy","modifiedBy"},maxPageSize = 200) Pageable pageable,

@@ -3,7 +3,7 @@ package com.jaramgroupware.attendance.web;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.jaramgroupware.attendance.TestUtils;
+import com.jaramgroupware.attendance.config.TestDataUtils;
 import com.jaramgroupware.attendance.domain.event.Event;
 import com.jaramgroupware.attendance.domain.event.EventSpecification;
 import com.jaramgroupware.attendance.domain.event.EventSpecificationBuilder;
@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.jaramgroupware.attendance.config.RestDocsConfig.field;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.doReturn;
 import static org.mockito.Mockito.verify;
@@ -67,7 +68,7 @@ class EventApiControllerTest {
     @MockBean
     private EventService eventService;
 
-    private final TestUtils testUtils = new TestUtils();
+    private final TestDataUtils testUtils = new TestDataUtils();
 
     @BeforeEach
     void setUp() {
@@ -82,41 +83,53 @@ class EventApiControllerTest {
     @Test
     void addEvent() throws Exception {
         //given
-        EventAddRequestControllerDto testEventDto = EventAddRequestControllerDto.builder()
+        var testEventDto = EventAddRequestControllerDto.builder()
                 .startDateTime(testUtils.getTestDateTime())
                 .endDateTime(testUtils.getTestDateTime())
                 .index(testUtils.getTestEvent().getIndex())
                 .name(testUtils.getTestEvent().getName())
                 .build();
 
-        doReturn(1L).when(eventService).add(testEventDto.toServiceDto(),testUtils.getTestUid());
+        var createdEvent = new EventResponseServiceDto(testUtils.getTestEvent());
+        doReturn(createdEvent).when(eventService).createEvent(testEventDto.toServiceDto(testUtils.getTestUid()));
+        var exceptResult = createdEvent.toControllerDto();
 
         //when
         ResultActions result = mvc.perform(
                 RestDocumentationRequestBuilders.post("/api/v1/event")
                         .header("user_pk",testUtils.getTestUid())
+                        .header("role_pk",4)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testEventDto))
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andDo(document("event-add-single",
+                .andDo(document("event-add",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(
                                 fieldWithPath("name").description("Event의 이름").attributes(field("constraints", "최소 1자, 최대 50자")),
                                 fieldWithPath("index").description("Event의 설명").attributes(field("constraints", "최대 255자")).optional(),
                                 fieldWithPath("start_date_time").description("Event의 시작 date time"),
-                                fieldWithPath("end_date_time").description("Event의 종료 date time").attributes(field("constraints", "end date time은 start date time 보다 더 미래의 시간이여야함."))
+                                fieldWithPath("end_date_time").description("Event의 종료 date time").attributes(field("constraints", "end_date_time은 start_date_time의 이후의 시간이여야함."))
                         ),
                         responseFields(
-                                fieldWithPath("event_id").description("새롭게 추가된 event의 ID ")
+                                subsectionWithPath("_links").ignored(),
+                                fieldWithPath("id").description("event의 ID"),
+                                fieldWithPath("name").description("event의 이름(제목)"),
+                                fieldWithPath("index").description("event의 설명"),
+                                fieldWithPath("start_date_time").description("Event의 시작 date time"),
+                                fieldWithPath("end_date_time").description("Event의 종료 date time")
                         )
                 ));
         //then
         result.andExpect(status().isOk())
-                .andExpect(jsonPath("$.event_id").value("1"));
+                .andExpect(jsonPath("$.id").value(exceptResult.getId()))
+                .andExpect(jsonPath("$.name").value(exceptResult.getName()))
+                .andExpect(jsonPath("$.index").value(exceptResult.getIndex()))
+                .andExpect(jsonPath("$.start_date_time").value("2022-08-04T04:16:00"))
+                .andExpect(jsonPath("$.end_date_time").value("2022-08-04T04:16:00"));
 
-        verify(eventService).add(testEventDto.toServiceDto(),testUtils.getTestUid());
+        verify(eventService).createEvent(testEventDto.toServiceDto(testUtils.getTestUid()));
     }
 
     @Test
@@ -124,15 +137,17 @@ class EventApiControllerTest {
         //given
         Long eventID = 1L;
 
-        EventResponseServiceDto eventResponseServiceDto = new EventResponseServiceDto(testUtils.getTestEvent());
+        var eventResponseServiceDto = new EventResponseServiceDto(testUtils.getTestEvent());
 
-        doReturn(eventResponseServiceDto).when(eventService).findById(eventID);
+        doReturn(eventResponseServiceDto).when(eventService).findEventById(eventID);
 
+        var exceptResult = eventResponseServiceDto.toControllerDto();
 
         //when
         ResultActions result = mvc.perform(
                 RestDocumentationRequestBuilders.get("/api/v1/event/{eventID}",eventID)
                         .header("user_pk",testUtils.getTestUid())
+                        .header("role_pk",4)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -143,17 +158,18 @@ class EventApiControllerTest {
                                 parameterWithName("eventID").description("대상 Event의 id")
                         ),
                         responseFields(
-                                fieldWithPath("id").description("대상 event의 ID"),
-                                fieldWithPath("name").description("대상 event의 name"),
-                                fieldWithPath("index").description("대상 event의 설명"),
-                                fieldWithPath("start_date_time").description("대상 event의 시작 date time"),
-                                fieldWithPath("end_date_time").description("대상 event의 종료 date time")
+                                subsectionWithPath("_links").ignored(),
+                                fieldWithPath("id").description("event의 ID"),
+                                fieldWithPath("name").description("event의 이름(제목)"),
+                                fieldWithPath("index").description("event의 설명"),
+                                fieldWithPath("start_date_time").description("Event의 시작 date time"),
+                                fieldWithPath("end_date_time").description("Event의 종료 date time")
                         )
                 ));
         //then
         result.andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(eventResponseServiceDto.toControllerDto())));
-        verify(eventService).findById(eventID);
+                .andExpect(content().json(objectMapper.writeValueAsString(exceptResult)));
+        verify(eventService).findEventById(eventID);
     }
 
     @Test
@@ -187,6 +203,7 @@ class EventApiControllerTest {
         ResultActions result = mvc.perform(
                 RestDocumentationRequestBuilders.get("/api/v1/event")
                         .header("user_pk",testUtils.getTestUid())
+                        .header("role_pk",4)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .queryParams(queryParam))
@@ -218,29 +235,28 @@ class EventApiControllerTest {
         //given
         Long eventID = 1L;
 
-        doReturn(1L).when(eventService).delete(eventID);
-
         //when
         ResultActions result = mvc.perform(
                 RestDocumentationRequestBuilders.delete("/api/v1/event/{eventID}",eventID)
                         .header("user_pk",testUtils.getTestUid())
+                        .header("role_pk",4)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andDo(document("event-del-single",
+                .andDo(document("event-del",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
                                 parameterWithName("eventID").description("삭제할 event의 id")
                         ),
                         responseFields(
-                                fieldWithPath("event_id").description("삭제가 완료된 event의 ID")
+                                fieldWithPath("message").description("처리 결과")
                         )
                 ));
         //then
         result.andExpect(status().isOk())
-                .andExpect(jsonPath("$.event_id").value("1"));
-        verify(eventService).delete(eventID);
+                .andExpect(jsonPath("$.message").value("OK"));
+        verify(eventService).deleteEvent(eventID);
     }
 
     @Test
@@ -248,26 +264,27 @@ class EventApiControllerTest {
         //given
         Long eventID = 1L;
 
-        EventUpdateRequestControllerDto eventUpdateRequestServiceDto = EventUpdateRequestControllerDto.builder()
+        var eventUpdateRequestServiceDto = EventUpdateRequestControllerDto.builder()
                 .startDateTime(testUtils.getTestDateTime())
                 .endDateTime(testUtils.getTestDateTime())
                 .index(testUtils.getTestEvent().getIndex())
                 .name(testUtils.getTestEvent().getName())
                 .build();
 
-        EventResponseServiceDto testEventResult = new EventResponseServiceDto(testUtils.getTestEvent());
+        var testEventResult = new EventResponseServiceDto(testUtils.getTestEvent());
 
-        doReturn(testEventResult).when(eventService).update(eventID,eventUpdateRequestServiceDto.toServiceDto(),testUtils.getTestUid());
+        doReturn(testEventResult).when(eventService).updateEvent(eventUpdateRequestServiceDto.toServiceDto(testUtils.getTestUid()));
 
         //when
         ResultActions result = mvc.perform(
                 RestDocumentationRequestBuilders.put("/api/v1/event/{eventID}",eventID)
                         .header("user_pk",testUtils.getTestUid())
+                        .header("role_pk",4)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(eventUpdateRequestServiceDto))
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andDo(document("event-update-single",
+                .andDo(document("event-update",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
@@ -277,19 +294,20 @@ class EventApiControllerTest {
                                 fieldWithPath("name").description("Event의 이름").attributes(field("constraints", "최소 1자, 최대 50자")),
                                 fieldWithPath("index").description("Event의 설명").attributes(field("constraints", "최대 255자")).optional(),
                                 fieldWithPath("start_date_time").description("Event의 시작 date time"),
-                                fieldWithPath("end_date_time").description("Event의 종료 date time").attributes(field("constraints", "end date time은 start date time 보다 더 미래의 시간이여야함."))
+                                fieldWithPath("end_date_time").description("Event의 종료 date time").attributes(field("constraints", "end_date_time은 start_date_time의 이후의 시간이여야함."))
                         ),
                         responseFields(
-                                fieldWithPath("id").description("대상 event의 ID"),
-                                fieldWithPath("name").description("대상 event의 name"),
-                                fieldWithPath("index").description("대상 event의 설명"),
-                                fieldWithPath("start_date_time").description("대상 event의 시작 date time"),
-                                fieldWithPath("end_date_time").description("대상 event의 종료 date time")
+                                subsectionWithPath("_links").ignored(),
+                                fieldWithPath("id").description("event의 ID"),
+                                fieldWithPath("name").description("event의 이름(제목)"),
+                                fieldWithPath("index").description("event의 설명"),
+                                fieldWithPath("start_date_time").description("Event의 시작 date time"),
+                                fieldWithPath("end_date_time").description("Event의 종료 date time")
                         )
                 ));
         //then
         result.andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(testEventResult.toControllerDto())));
-        verify(eventService).update(eventID,eventUpdateRequestServiceDto.toServiceDto(),testUtils.getTestUid());
+        verify(eventService).updateEvent(eventUpdateRequestServiceDto.toServiceDto(testUtils.getTestUid()));
     }
 }
