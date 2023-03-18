@@ -14,10 +14,11 @@ import java.time.LocalDateTime;
 public class AttendanceCodeResponseServiceDto {
     private String code;
     private LocalDateTime expAt;
-
+    private Long timetableId;
     public AttendanceCodeResponseControllerDto toControllerDto(){
         return AttendanceCodeResponseControllerDto.builder()
                 .code(code)
+                .timeTableId(timetableId)
                 .expAt(expAt)
                 .build();
     }

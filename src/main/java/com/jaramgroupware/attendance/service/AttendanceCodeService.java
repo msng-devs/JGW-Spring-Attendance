@@ -52,6 +52,7 @@ public class AttendanceCodeService {
 
 
         return AttendanceCodeResponseServiceDto.builder()
+                .timetableId(Long.parseLong(attendanceCodeDto.getTimeTableId()))
                 .code(attendanceCodeDto.getCode())
                 .expAt(expireAt)
                 .build();
