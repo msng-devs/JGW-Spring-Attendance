@@ -14,7 +14,6 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -62,9 +61,10 @@ class AttendanceCodeServiceTest {
 
 
         var testExceptResult = AttendanceCodeResponseServiceDto.builder()
-                    .code(testCode)
-                    .expAt(testDateTime.plus(Duration.ofSeconds(testRequestDto.getExpSec())))
-                    .build();
+                .timetableId(1L)
+                .code(testCode)
+                .expAt(testDateTime.plus(Duration.ofSeconds(testRequestDto.getExpSec())))
+                .build();
 
         doReturn(valueOperations).when(redisTemplate).opsForValue();
         doReturn(null).when(valueOperations).get(PREFIX + "1");
@@ -99,6 +99,7 @@ class AttendanceCodeServiceTest {
                 .build();
 
         var exceptResult = AttendanceCodeResponseServiceDto.builder()
+                .timetableId(1L)
                 .code(testCode)
                 .expAt(null)
                 .build();

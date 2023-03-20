@@ -1,34 +1,32 @@
-[[TimeTableAPI]]
-= TimeTable API
+[[EventAPI]]
+= Event API
 
-TimeTable을 추가하고, 삭제하고, 수정하는 API를 제공합니다.
+event 를 추가하고, 삭제하고, 수정하는 API를 제공합니다.
 
-[[AddTimeTable]]
-== 신규 TimeTable 추가
-=== POST /attendance/api/v1/timetable
+[[AddEvent]]
+== 단일 Event를 등록
+=== POST /attendance/api/v1/event
+
 RBAC - 4(임원진)
 
-해당 API를 통해 신규 TimeTable을 추가할 수 있습니다.
+operation::event-add[snippets='request-fields,response-fields,']
 
-operation::timetable-add[snippets='request-fields,response-fields']
+[[GetEvent]]
+== 단일 Event를 조회
+=== GET : /attendance/api/v1/event/{eventID}
 
-[[GetTimeTable]]
-== 단일 TimeTable 조회
-=== GET /attendance/api/v1/timetable/{timeTableId}
-Auth - 인증 필요
+AUTH - 인증 필요
 
-Time table의 ID로 해당 timetable의 정보를 조회할 수 있습니다.
+operation::event-get-single[snippets='path-parameters,response-fields,']
 
-operation::timetable-get-single[snippets='path-parameters,response-fields']
+[[GetEvents]]
+== 다수 Event를 조회
+=== GET : /attendance/api/v1/event/
 
-[[GetTimeTables]]
-== 다수 TimeTable 조회
-=== GET /attendance/api/v1/timetable
-Auth - 인증 필요
+AUTH - 인증 필요
 
-여러 time table들을 조회, 페이징, 정렬, 필터링을 통해 조회할 수 있습니다.
+Query Options, 혹은 Page Options 등을 사용하여 attendance를 조회하거나, pagination 작업을 수행할 수 있습니다.
 
-==== Query Parameters
 *주의!* 모든 option들은 단 한개의 인자만 수용가능합니다!
 
 * (O) "?memberID=456465456&timeTableID=1"
@@ -41,22 +39,18 @@ Auth - 인증 필요
 
 === Equal Query Options
 해당 옵션들은 입력된 값과 완전히 일치 되는 경우를 탐색합니다.
-예를 들어 "timeTableID = 1" 옵션을 제공하면, TimeTable(Object)의 ID가 1인 attendance들을 조회합니다.
+"createdBy = 'system'" 옵션을 제공하면, createdBy가  "system"인 event들을 조회합니다.
 [cols="10,10,10"]
 |===
 |param name|type|description
 
-|eventID
-|Long
-|해당 TimeTable이 속한 가지고 있는 Event(Object)의 ID
-
 |createdBy
 |String
-|해당 TimeTable를 생성한 사람
+|해당 event를 생성한 사람
 
 |modifiedBy
 |String
-|해당 TimeTable를 마지막으로 수정한 사람
+|해당 event를 마지막으로 수정한 사람
 |===
 
 === Range Query Options
@@ -77,27 +71,27 @@ Auth - 인증 필요
 |DateTime(yyyy-MM-dd HH:mm:ss)
 |startCreatedDateTime
 |endCreatedDateTime
-|해당 TimeTable가 생성된 시간
+|해당 event가 생성된 시간
 
 |ModifiedDateTime
 |DateTime(yyyy-MM-dd HH:mm:ss)
 |startModifiedDateTime
 |endModifiedDateTime
-|해당 TimeTable가 마지막으로 수정된 시간
+|해당 event가 마지막으로 수정된 시간
 
-|DateTime
-|DateTime(yyyy-MM-dd)
+|DATETIME
+|DateTime(yyyy-MM-dd HH:mm:ss)
 |startDateTime
 |endDateTime
-|해당 TimeTable의 기간
+|해당 event의 진행 기간
 |===
 
 === Like Query Options
-해당 옵션들을 사용하면, 해당 문자열을 포함하는 Attendance를 조회합니다.
+해당 옵션들을 사용하면, 해당 문자열을 포함하는 event를 조회합니다.
 
-예를 들어 "출결코드에 의해 자동으로 생성된 Attendance입니다."라는 index가 있다고 가정합시다.
+예를 들어 "이것은 세미나입니다"라는 index가 있다고 가정합시다.
 
-"index" 인자로 "출결" 이라는 값을 주었다면, index에 "출결"이라는 글자가 들어가는 Attendance들을 찾습니다.
+"index" 인자로 "세미나" 이라는 값을 주었다면, index에 "출결"이라는 글자가 들어가는 event들을 찾습니다.
 
 [cols="10,10,10"]
 |===
@@ -105,7 +99,11 @@ Auth - 인증 필요
 
 |name
 |String
-|해당 TimeTable의 이름.
+|해당 event의 이름입니다.
+
+|index
+|String
+|해당 event에 대한 부연설명입니다.
 |===
 
 === Pagination Options
@@ -132,25 +130,19 @@ sort 인자에 모든 Option들을 지정했다면, 마지막 인자로 Sort 방
 
 사용예시 "sort=member,asc", "sort=member,timeTable,desc"
 
-*주의!* Sort Option을 지정해주지 않더라도, 기본적으로 Member에 대하여 DESC 방향으로 정렬을 진행합니다!
+*주의!* Sort Option을 지정해주지 않더라도, 기본적으로 id에 대하여 DESC 방향으로 정렬을 진행합니다!
 [cols="10,10"]
 |===
 |param name|description
 
 |id
-|TimeTable의 id
+|event의 ID에 대하여 정렬합니다.
 
 |name
-|TimeTable의 이름
+|event의 이름에 대하여 정렬합니다.
 
-|event
-|timeTable이 속한 Event
-
-|startDateTime
-|시작 시간 순으로 정렬
-
-|endDateTime
-|종료 시간 순으로 정렬
+|index
+|index에 대하여 정렬합니다.
 
 |createdDateTime
 |생성된 시간순으로 정렬합니다.
@@ -158,29 +150,34 @@ sort 인자에 모든 Option들을 지정했다면, 마지막 인자로 Sort 방
 |modifiedDateTime
 |마지막으로 수정된 시간 순으로 정렬합니다.
 
-|createBy
-|생성자에 대하여 정렬합니다.
+|modifiedDateTime
+|마지막으로 수정된 시간 순으로 정렬합니다.
+
+|startDateTime
+|시작 시간 순으로 정렬합니다.
+
+|endDateTime
+|종료 시간 순으로 정렬합니다.
 
 |modifiedBy
 |마지막으로 수정한자에 대하여 정렬합니다.
 |===
+operation::event-get-multiple[snippets='response-fields,response-body,http-request,http-response,']
 
-operation::timetable-get-multiple[snippets='response-fields']
+[[DelEvent]]
+== 단일 Event를 제거
+=== DELETE : /attendance/api/v1/event/{eventID}
 
-[[DeleteTimeTable]]
-== 단일 TimeTable 삭제
-=== DELETE /attendance/api/v1/timetable/{timeTableId}
+
 RBAC - 4(임원진)
 
-해당 ID에 대한 timetable을 삭제합니다.
+operation::event-del[snippets='path-parameters,response-fields,']
 
-operation::timetable-del[snippets='path-parameters,response-fields']
+[[UpdateEvent]]
+== 단일 Event를 업데이트
+=== PUT : /attendance/api/v1/event/{eventID}
 
-[[UpdateTimeTable]]
-== TimeTable 정보 수정
-=== PUT /attendance/api/v1/timetable/{timeTableId}
+
 RBAC - 4(임원진)
 
-해당 API를 통해 timetable의 정보를 수정할 수 있습니다.
-
-operation::timetable-update[snippets='path-parameters,request-fields,response-fields']
+operation::event-update[snippets='request-fields,response-fields,']

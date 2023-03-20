@@ -504,14 +504,7 @@ class AttendanceApiControllerTest {
                                 .header("user_pk",2)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andDo(document("attendance-del",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        pathParameters(
-                                parameterWithName("attendacneId").description("대상 attendacne의 id")
-                        )
-                ));
+                .andDo(print());
 
         //then
         result.andExpect(status().isForbidden());

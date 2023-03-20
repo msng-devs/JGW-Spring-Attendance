@@ -523,7 +523,7 @@ class TimeTableApiControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andDo(document("timetable-attendance-code-get",
+                .andDo(document("timetable-attendance-code-delete",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(

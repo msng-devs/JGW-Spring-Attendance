@@ -1,0 +1,12 @@
+[[AttendanceTypeAPI]]
+= attendanceType API
+출결 종류를 조회할 수 있는 API 입니다.
+
+[[AttendanceType-Get-Multiple]]
+== 다수 attendanceType를 조회
+=== GET : /attendance/api/v1/attendanceType/
+
+
+Auth - 인증 필요
+
+operation::attendanceType-get-multiple[snippets='response-fields,]

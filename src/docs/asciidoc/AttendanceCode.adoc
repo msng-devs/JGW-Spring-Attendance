@@ -1,0 +1,40 @@
+[[AttendanceAPI]]
+= Attendance API
+
+출결 코드를 추가하고, 삭제하고, 사용하는 API를 제공합니다.
+
+[[AddAttendanceCode]]
+== 신규 AttendanceCode 추가
+=== POST /attendance/api/v1/timetable/{timeTableId}/attendanceCode
+RBAC - 4(어드민)
+
+해당 API를 통해 신규 AttendanceCode를 추가할 수 있습니다.
+
+operation::timetable-attendance-code-add[snippets='path-parameters,request-fields,response-fields']
+
+[[RegisterAttendanceCode]]
+== AttendanceCode로 출결 등록
+=== POST /attendance/api/v1/timetable/{timeTableId}/attendanceCode/register
+RBAC - 2(수습 회원)
+
+해당 API를 통해 Attendance Code로 출결을 등록할 수 있습니다.
+
+operation::timetable-attendance-code-register[snippets='path-parameters,response-fields']
+
+[[GetAttendanceCode]]
+== AttendanceCode 조회
+=== GET /attendance/api/v1/timetable/{timeTableId}/attendanceCode
+RBAC - 4(어드민)
+
+해당 API를 통해 해당하는 time table의 AttendanceCode를 조회할 수 있습니다.
+
+operation::timetable-attendance-code-get[snippets='path-parameters,response-fields']
+
+[[DelAttendanceCode]]
+== AttendanceCode 삭제
+=== DELETE /attendance/api/v1/timetable/{timeTableId}/attendanceCode
+RBAC - 4(어드민)
+
+해당 API를 통해 해당하는 time table의 AttendanceCode를 삭제할 수 있습니다.
+
+operation::timetable-attendance-code-delete[snippets='path-parameters,response-fields']

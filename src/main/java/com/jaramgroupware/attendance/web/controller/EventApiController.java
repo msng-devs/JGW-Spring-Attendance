@@ -40,6 +40,7 @@ public class EventApiController {
     private final EventService eventService;
     private final EventSpecificationBuilder eventSpecificationBuilder;
 
+    @Auth
     @GetMapping("/{eventId}")
     public EntityModel<EventResponseControllerDto> findEventById(@PathVariable Long eventId){
         var targetEventInfo = eventService.findEventById(eventId);
